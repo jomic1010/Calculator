@@ -72,20 +72,45 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    func removePoint(num: Double) -> String {
+            var floatNumString = String(num)
+            
+            if num == floor(num) {
+                for _ in 0..<floatNumString.count {
+                    if floatNumString.last == "." {
+                        floatNumString.removeLast()
+                        break
+                    }
+                    else {
+                        floatNumString.removeLast()
+                    }
+                }
+            }
+            
+            return floatNumString
+    }
     
     // 숫자 버튼 클릭
     func clickNum(_ a: Double) {
         
-        printNum = printNum * 10 + a
+        var fraction = a
+        var powTen = 1
         
-        if decimal != 0 {
-            for _ in 0...decimal {
-                printNum *= 0.1
+        
+        if howManyFraction > 0 {
+            for _ in 0..<howManyFraction {
+                fraction *= 0.1
+                powTen *= 10
+                fraction = round(fraction * Double(powTen)) / Double(powTen)
             }
-        } else {
-            
+            printNum += fraction
+            printNum = round(printNum * Double(powTen)) / Double(powTen)
+            howManyFraction += 1
         }
-        result.text = String(printNum)
+        else {
+            printNum = printNum * 10 + a
+        }
+        self.result.text = removePoint(num: printNum)
     }
     
     /*
@@ -104,12 +129,14 @@ class ViewController: UIViewController {
         operation = num
         tempNum = printNum
         printNum = 0
+        dotInit()
     }
     
     // 계산 함수
     func operateNum(_ a: Double, _ b: Double, operation: (Double, Double) -> Double) {
         printNum = operation(a, b)
         result.text = String(printNum)
+        dotInit()
     }
     
     // 덧셈 계산
@@ -171,14 +198,21 @@ class ViewController: UIViewController {
         }
         operation = 0
         isSelectedOperatior = false
+        dotInit()
     }
     
     // C 버튼 클릭
     @IBAction func clickResetBtn(_ sender: UIButton) {
         printNum = 0
         tempNum = 0
-        decimal = 0
+        dotInit()
         result.text = "0"
+    }
+    
+    func dotInit() {
+        decimal = 0
+        howManyFraction = 0
+        isFraction = false
     }
 
     // + 버튼 클릭
