@@ -148,6 +148,15 @@ class ViewController: UIViewController {
     // 나눗셈 계산
     var operateDivision: (Double, Double) -> Double = { $0 / $1 }
     
+    func operatePercent(_ a: Double, _ b: Double, operationPercent: (Double, Double) -> Double) {
+        printNum = operationPercent(a, b)
+        result.text = String(printNum)
+        dotInit()
+    }
+    
+    var operatePercentPlus: (Double, Double) -> Double = { $0 + ($0 * ($1 / 100)) }
+    var operatePercentMinus: (Double, Double) -> Double = { $0 - ($0 * ($1 / 100)) }
+    var operatePercentMultiply: (Double, Double) -> Double = { $0 * ($1 / 100) }
     
     // 콤마 계산 수정 필요
     func operateDot(num: Double) -> String {
@@ -180,6 +189,23 @@ class ViewController: UIViewController {
             howManyFraction += 1
             self.result.text = operateDot(num: printNum) + "."
         }
+    }
+    
+    // % 버튼 클릭
+    @IBAction func clickPercentBtn(_ sender: Any) {
+        switch operation {
+        case 1:
+            operatePercent(tempNum, printNum, operationPercent: operatePercentPlus)
+        case 2:
+            operatePercent(tempNum, printNum, operationPercent: operatePercentMinus)
+        case 3:
+            operatePercent(tempNum, printNum, operationPercent: operatePercentMultiply)
+        default:
+            break
+        }
+        operation = 0
+        isSelectedOperatior = false
+        dotInit()
     }
     
     // = 버튼 클릭
